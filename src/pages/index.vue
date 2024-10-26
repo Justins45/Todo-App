@@ -1,11 +1,10 @@
 <script setup lang="ts">
+import ListItem from '@/components/ListItem.vue'
 import { PlusIcon } from '@heroicons/vue/24/solid'
 
 function runTest() {
   alert('test ran')
 }
-
-console.log('wasda')
 </script>
 
 <template>
@@ -23,25 +22,13 @@ console.log('wasda')
     <!-- List container start -->
     <ul class="ml-3 mt-3 lowercase">
       <!-- List items -->
-      <li>
-        <input type="checkbox" id="item1" class="mr-2" />
-        <label for="item1">make CONTAINER</label>
-      </li>
+      <ListItem name="make CONTAINERS" id="item1" />
       <!-- List items -->
-      <li>
-        <input type="checkbox" id="item2" class="mr-2" />
-        <label for="item2">make components</label>
-      </li>
+      <ListItem name="make components" id="item" />
       <!-- List items -->
-      <li>
-        <input type="checkbox" id="item3" class="mr-2" />
-        <label for="item3">make styling</label>
-      </li>
+      <ListItem name="make styling" id="item3" />
       <!-- List items -->
-      <li>
-        <input type="checkbox" id="item4" class="mr-2" />
-        <label for="item4">combine all items</label>
-      </li>
+      <ListItem name="combine all items" id="item4" />
     </ul>
     <!-- List containter end -->
   </div>
