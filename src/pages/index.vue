@@ -5,6 +5,8 @@ import { PlusIcon } from '@heroicons/vue/24/solid'
 function runTest() {
   alert('test ran')
 }
+
+// TODO: add json file of "saved" todo items
 </script>
 
 <template>

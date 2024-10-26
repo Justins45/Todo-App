@@ -11,6 +11,7 @@ const props = withDefaults(
 )
 
 const checked = ref(props.checked)
+// TODO: add UUID for each list item
 </script>
 <template>
   <li>

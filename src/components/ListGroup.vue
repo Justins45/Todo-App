@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import ListItem from '@/components/ListItem.vue'
+
+// TODO: add for each of list items
 </script>
 <template>
   <div class="px-5 py-3">
