@@ -7,6 +7,8 @@ import TodoData from '../assets/data.json'
 function runTest() {
   alert('test ran')
 }
+
+// TODO: get form working for adding new todo groups | + make form a modal / popup
 </script>
 
 <template>
