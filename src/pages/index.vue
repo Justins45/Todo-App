@@ -10,7 +10,6 @@ function runTest() {
 </script>
 
 <template>
-  <!-- Add todo group -->
   <div class="flex justify-end">
     <button @click="runTest()">
       <PlusIcon class="h-10 w-10 text-green-500" />

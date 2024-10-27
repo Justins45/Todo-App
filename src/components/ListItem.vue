@@ -1,14 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const props = withDefaults(
-  defineProps<{
-    completed: boolean
-    name: string
-    id: string
-  }>(),
-  { completed: false },
-)
+const props = defineProps<{
+  id: string
+  name: string
+  completed: boolean
+}>()
 
 const checked = ref(props.completed)
 // TODO: add UUID for each list item

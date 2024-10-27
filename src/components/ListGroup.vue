@@ -1,14 +1,11 @@
 <script setup lang="ts">
 import ListItem from '@/components/ListItem.vue'
+import { type TypeListItem } from '../types'
 
 const props = defineProps<{
   id: string
   group_name: string
-  data: Array<{
-    id: string
-    name: string
-    completed: boolean
-  }>
+  data: Array<TypeListItem>
 }>()
 </script>
 <template>
