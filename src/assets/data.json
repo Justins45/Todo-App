@@ -1,0 +1,49 @@
+[
+  {
+    "id": 1,
+    "group_name": "make todo app",
+    "data": [
+      {
+        "id": "item-1",
+        "name": "make CONTAINERS",
+        "completed": false
+      },
+      {
+        "id": "item-2",
+        "name": "make components",
+        "completed": false
+      },
+      {
+        "id": "item-3",
+        "name": "make styling",
+        "completed": false
+      },
+      {
+        "id": "item-4",
+        "name": "combine all items",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "group_name": "Style todo app",
+    "data": [
+      {
+        "id": "item-5",
+        "name": "style lists",
+        "completed": false
+      },
+      {
+        "id": "item-6",
+        "name": "style items",
+        "completed": false
+      },
+      {
+        "id": "item-7",
+        "name": "style background",
+        "completed": false
+      }
+    ]
+  }
+]
