@@ -6,14 +6,18 @@ import TodoData from '../assets/data.json'
 
 const new_group_name = ref('')
 const err = ref()
+
 function runTest() {
+  // TODO: make button show modal + input form
   alert('test ran')
 }
 
 function onSubmit() {
   if (new_group_name.value !== '') {
+    // remove any error messages present
     err.value = ''
 
+    // add data to json file
     TodoData.push({
       id: '3',
       group_name: new_group_name.value,
@@ -21,11 +25,12 @@ function onSubmit() {
     })
 
     const new_data_sheet = JSON.stringify(TodoData, null, 4)
-
     console.log('new data sheet', new_data_sheet)
 
+    // remove input value
     new_group_name.value = ''
   } else {
+    // return error if no value in input
     err.value = 'please input a value'
   }
 }
@@ -48,7 +53,10 @@ function onSubmit() {
         placeholder="Todo Group Name"
         id="todo-group-name-input"
         v-model="new_group_name"
-        class="rounded-md border border-zinc-500 p-1"
+        class="rounded-md border p-1"
+        :class="[
+          err ? 'border-red-500 placeholder:text-red-500' : 'border-zinc-500',
+        ]"
       />
       <template v-if="err">
         <p class="p-1 font-bold text-red-500">{{ err }}</p>
