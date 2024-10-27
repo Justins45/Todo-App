@@ -9,6 +9,7 @@ const props = defineProps<{
 
 const checked = ref(props.completed)
 // TODO: add UUID for each list item
+// TODO: when completed update data.json at corrent location
 // TODO: when completed move to bottom of group
 </script>
 <template>
