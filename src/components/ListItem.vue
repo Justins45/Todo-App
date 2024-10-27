@@ -3,21 +3,19 @@ import { ref } from 'vue'
 
 const props = withDefaults(
   defineProps<{
-    checked?: boolean
+    completed: boolean
     name: string
     id: string
   }>(),
-  { checked: false },
+  { completed: false },
 )
 
-const checked = ref(props.checked)
+const checked = ref(props.completed)
 // TODO: add UUID for each list item
 </script>
 <template>
-  <li>
-    <input type="checkbox" :id="props.id" class="mr-2" v-model="checked" />
-    <label :for="props.id" :class="[checked ? 'underline' : '']">{{
-      props.name
-    }}</label>
-  </li>
+  <input type="checkbox" :id="props.id" class="mr-2" v-model="checked" />
+  <label :for="props.id" :class="[checked ? 'underline' : '']">{{
+    props.name
+  }}</label>
 </template>
