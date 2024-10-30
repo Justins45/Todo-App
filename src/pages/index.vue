@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { PlusIcon } from '@heroicons/vue/24/solid'
 import ListGroup from '@/components/ListGroup.vue'
 import TodoData from '../assets/data.json'
+import pushTodoGroup from '../scripts/groupNamePush'
 
 const new_group_name = ref('')
 const err = ref()
@@ -30,14 +31,7 @@ async function onSubmit() {
 
     // FIXME: cors error not allowing json post - Axios / npm cors install might be needed + moving request to a .js file
 
-    await fetch('http://127.0.0.1:8080/data.json', {
-      method: 'POST',
-      mode: 'no-cors',
-      body: new_data_sheet,
-    })
-
-    const new_new_data = await fetch('http://127.0.0.1:8080/data.json')
-    console.log('NEW NEW NEW DATA SHEET', JSON.stringify(new_new_data, null, 4))
+    pushTodoGroup(new_data_sheet)
 
     // TODO: get data to stay in local json file and not in local json file - NOTE: might need a local server to run for this
 
