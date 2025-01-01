@@ -1,18 +1,24 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { PlusIcon } from '@heroicons/vue/24/solid'
 import ListGroup from '@/components/ListGroup.vue'
-import TodoData from '../assets/data.json'
-import pushTodoGroup from '../scripts/groupNamePush'
+// import TodoData from '../assets/data.json'
+// NOTE: used in commented out code, commented out to prevent errors throwinga
+// import pushTodoGroup from '../scripts/groupNamePush'
+
+import localforage from 'localforage'
 
 const new_group_name = ref('')
 const err = ref()
+
+const TodoData = ref()
 
 function runTest() {
   // TODO: make button show modal + input form
   alert('test ran')
 }
-
+/*
+// NOTE: This is the old submit function and the new one is on line #50
 async function onSubmit() {
   if (new_group_name.value !== '') {
     // remove any error messages present
@@ -42,6 +48,75 @@ async function onSubmit() {
     err.value = 'please input a value'
   }
 }
+*/
+// Start of LocalForage submit method
+
+function onSubmit() {
+  localforage
+    .setItem('1', {
+      id: '1',
+      group_name: 'make todo app',
+      data: [
+        {
+          id: 'item-1',
+          name: 'make CONTAINERS',
+          completed: false,
+        },
+        {
+          id: 'item-2',
+          name: 'make components',
+          completed: false,
+        },
+        {
+          id: 'item-3',
+          name: 'make styling',
+          completed: false,
+        },
+        {
+          id: 'item-4',
+          name: 'combine all items',
+          completed: false,
+        },
+      ],
+    })
+    .then(function (value) {
+      // Do other things once the value has been saved.
+      console.log(value, 'set item')
+    })
+    .catch(function (err) {
+      // This code runs if there were any errors
+      console.log(err)
+    })
+}
+
+function getItems() {
+  localforage
+    .getItem('1')
+    .then(function (value) {
+      // This code runs once the value has been loaded
+      // from the offline store.
+      TodoData.value = value
+      // console.log(TodoData.value, 'get item')
+    })
+    .catch(function (err) {
+      // This code runs if there were any errors
+      console.log(err)
+    })
+}
+
+localforage
+  .keys()
+  .then(function (keys) {
+    // An array of all the key names.
+    console.log(keys)
+  })
+  .catch(function (err) {
+    // This code runs if there were any errors
+    console.log(err)
+  })
+
+// Run funtions to grab data on load
+getItems()
 
 // TODO: get form working for adding new todo groups | + make form a modal / popup
 </script>
@@ -75,6 +150,7 @@ async function onSubmit() {
     </form>
   </div>
   <div v-for="data in TodoData" :key="data.id">
+    <p>{{ data }}</p>
     <ListGroup :id="data.id" :group_name="data.group_name" :data="data.data" />
   </div>
 </template>
