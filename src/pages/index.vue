@@ -1,59 +1,35 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { PlusIcon } from '@heroicons/vue/24/solid'
-import ListGroup from '@/components/ListGroup.vue'
-// import TodoData from '../assets/data.json'
-// NOTE: used in commented out code, commented out to prevent errors throwinga
-// import pushTodoGroup from '../scripts/groupNamePush'
-
 import localforage from 'localforage'
+
+import ListGroup from '@/components/ListGroup.vue'
+
+const todo_keys = ref()
+const todo_data = ref()
 
 const new_group_name = ref('')
 const err = ref()
-
-const TodoData = ref()
 
 function runTest() {
   // TODO: make button show modal + input form
   alert('test ran')
 }
-/*
-// NOTE: This is the old submit function and the new one is on line #50
-async function onSubmit() {
-  if (new_group_name.value !== '') {
-    // remove any error messages present
-    err.value = ''
 
-    // add data to json file
-    // TODO: add pina store to keep track of id number increasing + setting default to new "top" number each time
-    TodoData.push({
-      id: '3',
-      group_name: new_group_name.value,
-      data: [],
-    })
-
-    const new_data_sheet = JSON.stringify(TodoData, null, 4)
-    console.log('new data sheet', new_data_sheet)
-
-    // FIXME: cors error not allowing json post - Axios / npm cors install might be needed + moving request to a .js file
-
-    pushTodoGroup(new_data_sheet)
-
-    // TODO: get data to stay in local json file and not in local json file - NOTE: might need a local server to run for this
-
-    // remove input value
-    new_group_name.value = ''
-  } else {
-    // return error if no value in input
-    err.value = 'please input a value'
-  }
-}
-*/
-// Start of LocalForage submit method
+/**
+ *
+ * TODO: add functuion perameters
+ * id - pina store value
+ * new_group_name - from add group input
+ *
+ */
 
 function onSubmit() {
-  localforage
-    .setItem('1', {
+  // get data
+  const inputData = ref()
+  // add data to
+  inputData.value = [
+    {
       id: '1',
       group_name: 'make todo app',
       data: [
@@ -78,7 +54,18 @@ function onSubmit() {
           completed: false,
         },
       ],
-    })
+    },
+  ]
+
+  console.log(inputData.value)
+  // NOTE: turn a proxy array into a readable array with previous json formatted data
+  const item = JSON.parse(JSON.stringify(inputData.value))
+  console.log(item)
+
+  // add data to storage
+  localforage
+    .setItem('1', item)
+    // is this .then and .catch needed? -- maybe .catch if theres an error.... hmmmm
     .then(function (value) {
       // Do other things once the value has been saved.
       console.log(value, 'set item')
@@ -87,7 +74,24 @@ function onSubmit() {
       // This code runs if there were any errors
       console.log(err)
     })
+
+  // remove data to prevent adding duplicates
+  inputData.value = []
 }
+
+// get all keys to be used in a loop to grab each item
+localforage
+  .keys()
+  .then(function (keys) {
+    // An array of all the key names.
+    console.log(keys)
+    // add all keys to an array
+    todo_keys.value = keys
+  })
+  .catch(function (err) {
+    // This code runs if there were any errors
+    console.log(err)
+  })
 
 function getItems() {
   localforage
@@ -95,25 +99,14 @@ function getItems() {
     .then(function (value) {
       // This code runs once the value has been loaded
       // from the offline store.
-      TodoData.value = value
-      // console.log(TodoData.value, 'get item')
+      todo_data.value = value
+      console.log(todo_data.value, 'get item')
     })
     .catch(function (err) {
       // This code runs if there were any errors
       console.log(err)
     })
 }
-
-localforage
-  .keys()
-  .then(function (keys) {
-    // An array of all the key names.
-    console.log(keys)
-  })
-  .catch(function (err) {
-    // This code runs if there were any errors
-    console.log(err)
-  })
 
 // Run funtions to grab data on load
 getItems()
@@ -149,8 +142,7 @@ getItems()
       </button>
     </form>
   </div>
-  <div v-for="data in TodoData" :key="data.id">
-    <p>{{ data }}</p>
+  <div v-for="data in todo_data" :key="data.id">
     <ListGroup :id="data.id" :group_name="data.group_name" :data="data.data" />
   </div>
 </template>
