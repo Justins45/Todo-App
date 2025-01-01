@@ -93,23 +93,18 @@ localforage
     console.log(err)
   })
 
-function getItems() {
-  localforage
-    .getItem('1')
-    .then(function (value) {
-      // This code runs once the value has been loaded
-      // from the offline store.
-      todo_data.value = value
-      console.log(todo_data.value, 'get item')
-    })
-    .catch(function (err) {
-      // This code runs if there were any errors
-      console.log(err)
-    })
-}
-
-// Run funtions to grab data on load
-getItems()
+localforage
+  .getItem('1')
+  .then(function (value) {
+    // This code runs once the value has been loaded
+    // from the offline store.
+    todo_data.value = value
+    console.log(todo_data.value, 'get item')
+  })
+  .catch(function (err) {
+    // This code runs if there were any errors
+    console.log(err)
+  })
 
 // TODO: get form working for adding new todo groups | + make form a modal / popup
 </script>
