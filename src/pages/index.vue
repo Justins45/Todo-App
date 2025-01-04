@@ -2,13 +2,12 @@
 import { ref, watchEffect } from 'vue'
 import { PlusIcon } from '@heroicons/vue/24/solid'
 import localforage from 'localforage'
-import { idCounterStore } from '@/stores/idCounter'
 
 import ListGroup from '@/components/ListGroup.vue'
 
 const todo_keys = ref()
 const todo_data = ref([])
-const idCountStore = idCounterStore()
+const counter = ref(0)
 
 const new_group_name = ref('')
 const err = ref()
@@ -101,7 +100,7 @@ function onSubmit(idCount: number, group_name: string) {
   // remove data to prevent adding duplicates
   inputData.value = []
 
-  idCountStore.count++
+  counter.value++
   getItems()
   // NOTE: using reload to prevent a duplicate list from appearing when adding / changing a todo group
   location.reload()
@@ -121,7 +120,7 @@ getItems()
   <!-- todo group form -->
   <div class="mx-3 my-5">
     <form
-      @submit.prevent="onSubmit(idCountStore.count, new_group_name)"
+      @submit.prevent="onSubmit(counter, new_group_name)"
       class="flex flex-col space-y-3"
     >
       <label for="todo-group-input">Todo group name input</label>
