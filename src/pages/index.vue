@@ -98,6 +98,8 @@ function onSubmit(idCount: number, group_name: string) {
 
   idCountStore.count++
   getItems()
+  // NOTE: using reload to prevent a duplicate list from appearing when adding / changing a todo group
+  location.reload()
 }
 
 getItems()
