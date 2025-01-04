@@ -3,9 +3,9 @@ import ListItem from '@/components/ListItem.vue'
 import { type TypeListItem } from '../types'
 
 const props = defineProps<{
-  id: string
-  group_name: string
-  data: Array<TypeListItem>
+  id: any
+  group_name: any
+  data: any
 }>()
 
 // TODO: add a button to add todo items | + use same modal popup from adding todo group

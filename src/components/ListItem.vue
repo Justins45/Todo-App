@@ -2,9 +2,9 @@
 import { ref } from 'vue'
 
 const props = defineProps<{
-  id: string
-  name: string
-  completed: boolean
+  id?: any
+  name?: any
+  completed?: any
 }>()
 
 const checked = ref(props.completed)
