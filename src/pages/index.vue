@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { PlusIcon } from '@heroicons/vue/24/solid'
 import localforage from 'localforage'
+import { idCounterStore } from '@/stores/idCounter'
 
 import ListGroup from '@/components/ListGroup.vue'
 
 const todo_keys = ref()
-const todo_data = ref()
+const todo_data = ref([])
+const idCountStore = idCounterStore()
 
 const new_group_name = ref('')
 const err = ref()
@@ -16,44 +18,60 @@ function runTest() {
   alert('test ran')
 }
 
-/**
- *
- * TODO: add functuion perameters
- * id - pina store value
- * new_group_name - from add group input
- *
- */
+// get all keys to be used in a loop to grab each item
+const getKeys = () => {
+  localforage
+    .keys()
+    .then(function (keys) {
+      // An array of all the key names.
+      // console.log(keys, 'get keys')
+      // add all keys to an array
+      todo_keys.value = keys
+      // console.log(todo_keys.value, 'todo_keys.value')
+    })
+    .catch(function (err) {
+      // This code runs if there were any errors
+      console.log(err)
+    })
+}
 
-function onSubmit() {
+const getItems = () => {
+  getKeys()
+
+  watchEffect(async () => {
+    const response = JSON.parse(JSON.stringify(todo_keys.value))
+    const todo_keys_list = await response
+
+    for (let i = 0; i < todo_keys_list.length; i++) {
+      localforage
+        .getItem(i.toString())
+        .then(function (value) {
+          // This code runs once the value has been loaded
+          // from the offline store.
+          todo_data.value.push(value)
+          /*
+            console.log(`value list item ${i}`)
+            console.log(`get item ${i} ${value}`)
+            console.log(todo_data.value, `todo_data.value after ${i}`)
+          */
+        })
+        .catch(function (err) {
+          // This code runs if there were any errors
+          console.log(err)
+        })
+    }
+  })
+}
+
+function onSubmit(idCount: number, group_name: string) {
   // get data
   const inputData = ref()
+  //TODO: turn localforage scripts into functions in another file ?? | make this area cleaner
   // add data to
   inputData.value = [
     {
-      id: '1',
-      group_name: 'make todo app',
-      data: [
-        {
-          id: 'item-1',
-          name: 'make CONTAINERS',
-          completed: false,
-        },
-        {
-          id: 'item-2',
-          name: 'make components',
-          completed: false,
-        },
-        {
-          id: 'item-3',
-          name: 'make styling',
-          completed: false,
-        },
-        {
-          id: 'item-4',
-          name: 'combine all items',
-          completed: false,
-        },
-      ],
+      id: idCount,
+      group_name: group_name,
     },
   ]
 
@@ -64,7 +82,7 @@ function onSubmit() {
 
   // add data to storage
   localforage
-    .setItem('1', item)
+    .setItem(idCount.toString(), item)
     // is this .then and .catch needed? -- maybe .catch if theres an error.... hmmmm
     .then(function (value) {
       // Do other things once the value has been saved.
@@ -77,34 +95,12 @@ function onSubmit() {
 
   // remove data to prevent adding duplicates
   inputData.value = []
+
+  idCountStore.count++
+  getItems()
 }
 
-// get all keys to be used in a loop to grab each item
-localforage
-  .keys()
-  .then(function (keys) {
-    // An array of all the key names.
-    console.log(keys)
-    // add all keys to an array
-    todo_keys.value = keys
-  })
-  .catch(function (err) {
-    // This code runs if there were any errors
-    console.log(err)
-  })
-
-localforage
-  .getItem('1')
-  .then(function (value) {
-    // This code runs once the value has been loaded
-    // from the offline store.
-    todo_data.value = value
-    console.log(todo_data.value, 'get item')
-  })
-  .catch(function (err) {
-    // This code runs if there were any errors
-    console.log(err)
-  })
+getItems()
 
 // TODO: get form working for adding new todo groups | + make form a modal / popup
 </script>
@@ -117,7 +113,10 @@ localforage
   </div>
   <!-- todo group form -->
   <div class="mx-3 my-5">
-    <form @submit.prevent="onSubmit" class="flex flex-col space-y-3">
+    <form
+      @submit.prevent="onSubmit(idCountStore.count, new_group_name)"
+      class="flex flex-col space-y-3"
+    >
       <label for="todo-group-input">Todo group name input</label>
       <input
         type="text"
@@ -137,7 +136,12 @@ localforage
       </button>
     </form>
   </div>
-  <div v-for="data in todo_data" :key="data.id">
-    <ListGroup :id="data.id" :group_name="data.group_name" :data="data.data" />
+  <div v-for="data in todo_data" :key="data[0].id">
+    <!-- {{ data[0] }} -->
+    <ListGroup
+      :id="data[0].id"
+      :group_name="data[0].group_name"
+      :data="data[0].data"
+    />
   </div>
 </template>
