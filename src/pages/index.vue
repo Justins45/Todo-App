@@ -136,12 +136,17 @@ getItems()
       </button>
     </form>
   </div>
-  <div v-for="data in todo_data" :key="data[0].id">
-    <!-- {{ data[0] }} -->
-    <ListGroup
-      :id="data[0].id"
-      :group_name="data[0].group_name"
-      :data="data[0].data"
-    />
-  </div>
+  <template v-if="todo_data">
+    <div v-for="data in todo_data" :key="data[0].id">
+      <!-- {{ data[0] }} -->
+      <ListGroup
+        :id="data[0].id"
+        :group_name="data[0].group_name"
+        :data="data[0].data"
+      />
+    </div>
+  </template>
+  <template v-else>
+    <p>you have no todo groups</p>
+  </template>
 </template>
