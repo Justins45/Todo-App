@@ -64,6 +64,11 @@ const getItems = () => {
 }
 
 function onSubmit(idCount: number, group_name: string) {
+  if (group_name == '') {
+    err.value = 'please enter a name for a new todo group'
+    return
+  }
+
   // get data
   const inputData = ref()
   //TODO: turn localforage scripts into functions in another file ?? | make this area cleaner
