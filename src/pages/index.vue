@@ -2,10 +2,10 @@
 import { ref, watchEffect } from 'vue'
 import { PlusIcon } from '@heroicons/vue/24/solid'
 import localforage from 'localforage'
+import { v4 as uuidv4 } from 'uuid'
 
 import ListGroup from '@/components/ListGroup.vue'
 
-const todo_keys = ref()
 const todo_data = ref([])
 const counter = ref(0)
 
@@ -17,16 +17,14 @@ function runTest() {
   alert('test ran')
 }
 
-// get all keys to be used in a loop to grab each item
-const getKeys = () => {
+const getItems = () => {
   localforage
-    .keys()
-    .then(function (keys) {
-      // An array of all the key names.
-      // console.log(keys, 'get keys')
-      // add all keys to an array
-      todo_keys.value = keys
-      // console.log(todo_keys.value, 'todo_keys.value')
+    .iterate(function (value) {
+      // console.log(value)
+      todo_data.value.push(value)
+    })
+    .then(function () {
+      // console.log('Iteration has completed')
     })
     .catch(function (err) {
       // This code runs if there were any errors
@@ -34,35 +32,7 @@ const getKeys = () => {
     })
 }
 
-const getItems = () => {
-  getKeys()
-
-  watchEffect(async () => {
-    const response = JSON.parse(JSON.stringify(todo_keys.value))
-    const todo_keys_list = await response
-
-    for (let i = 0; i < todo_keys_list.length; i++) {
-      localforage
-        .getItem(i.toString())
-        .then(function (value) {
-          // This code runs once the value has been loaded
-          // from the offline store.
-          todo_data.value.push(value)
-          /*
-            console.log(`value list item ${i}`)
-            console.log(`get item ${i} ${value}`)
-            console.log(todo_data.value, `todo_data.value after ${i}`)
-          */
-        })
-        .catch(function (err) {
-          // This code runs if there were any errors
-          console.log(err)
-        })
-    }
-  })
-}
-
-function onSubmit(idCount: number, group_name: string) {
+function onSubmit(group_name: string) {
   if (group_name == '') {
     err.value = 'please enter a name for a new todo group'
     return
@@ -70,11 +40,13 @@ function onSubmit(idCount: number, group_name: string) {
 
   // get data
   const inputData = ref()
+  const uuid = uuidv4()
+
   //TODO: turn localforage scripts into functions in another file ?? | make this area cleaner
   // add data to
   inputData.value = [
     {
-      id: idCount,
+      id: uuid,
       group_name: group_name,
     },
   ]
@@ -86,7 +58,7 @@ function onSubmit(idCount: number, group_name: string) {
 
   // add data to storage
   localforage
-    .setItem(idCount.toString(), item)
+    .setItem(uuid, item)
     // is this .then and .catch needed? -- maybe .catch if theres an error.... hmmmm
     .then(function (value) {
       // Do other things once the value has been saved.
@@ -120,7 +92,7 @@ getItems()
   <!-- todo group form -->
   <div class="mx-3 my-5">
     <form
-      @submit.prevent="onSubmit(counter, new_group_name)"
+      @submit.prevent="onSubmit(new_group_name)"
       class="flex flex-col space-y-3"
     >
       <label for="todo-group-input">Todo group name input</label>

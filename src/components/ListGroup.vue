@@ -3,7 +3,7 @@ import ListItem from '@/components/ListItem.vue'
 import { type TypeListItem } from '../types'
 
 const props = defineProps<{
-  id: number
+  id: string
   group_name: string
   data?: Array<TypeListItem>
 }>()
@@ -11,7 +11,7 @@ const props = defineProps<{
 // TODO: add a button to add todo items | + use same modal popup from adding todo group
 </script>
 <template>
-  <div class="px-5 py-3" :id="props.id.toString()">
+  <div class="px-5 py-3" :id="props.id">
     <h2 class="h-10 uppercase">{{ props.group_name }}</h2>
     <!-- TODO: add remove group button -->
     <div class="h-0.5 w-full rounded-xl bg-zinc-300"></div>
