@@ -142,7 +142,7 @@ getItems()
       </button>
     </form>
   </div>
-  <template v-if="todo_data">
+  <template v-if="todo_data[0]">
     <div v-for="data in todo_data" :key="data[0].id">
       <!-- {{ data[0] }} -->
       <ListGroup
