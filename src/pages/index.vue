@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 import { PlusIcon } from '@heroicons/vue/24/solid'
 import localforage from 'localforage'
 import { v4 as uuidv4 } from 'uuid'
@@ -17,14 +17,27 @@ function runTest() {
   alert('test ran')
 }
 
+//TODO: sort by group_name alphabeticaly
+const sortArray = arr => {
+  //NOTE: Remove extra array wrapper
+  for (let i = 0; i < arr.length; i++) {
+    todo_data.value.push(arr[i][0])
+  }
+
+  // sort array by group_name value
+  todo_data.value.sort((a, b) => a.group_name.localeCompare(b.group_name))
+}
+
+//TODO: maybe make mnaual function that removes the localforage Array<Array<object>> and makes it just Array<object>
 const getItems = () => {
+  const array_holder = ref([])
+
   localforage
     .iterate(function (value) {
-      // console.log(value)
-      todo_data.value.push(value)
+      array_holder.value.push(value)
     })
     .then(function () {
-      // console.log('Iteration has completed')
+      sortArray(array_holder.value)
     })
     .catch(function (err) {
       // This code runs if there were any errors
@@ -47,7 +60,7 @@ function onSubmit(group_name: string) {
   inputData.value = [
     {
       id: uuid,
-      group_name: group_name,
+      group_name: group_name.toLowerCase(),
     },
   ]
 
@@ -114,13 +127,13 @@ getItems()
       </button>
     </form>
   </div>
-  <template v-if="todo_data[0]">
-    <div v-for="data in todo_data" :key="data[0].id">
-      <!-- {{ data[0] }} -->
+  <template v-if="todo_data">
+    <div v-for="data in todo_data" :key="data.id">
+      <!-- {{ data }} -->
       <ListGroup
-        :id="data[0].id"
-        :group_name="data[0].group_name"
-        :data="data[0].data"
+        :id="data.id"
+        :group_name="data.group_name"
+        :data="data.data"
       />
     </div>
   </template>
