@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import ListItem from '@/components/ListItem.vue'
-import { TrashIcon } from '@heroicons/vue/24/outline'
+import { TrashIcon, SquaresPlusIcon } from '@heroicons/vue/24/outline'
 import localforage from 'localforage'
 
 import { type TypeListItem } from '../types'
@@ -10,6 +11,10 @@ const props = defineProps<{
   group_name: string
   data?: Array<TypeListItem>
 }>()
+
+const todo_title = ref('')
+const input_err = ref('')
+const show_form = ref(false)
 
 const deleteGroup = (id: string) => {
   localforage
@@ -22,6 +27,13 @@ const deleteGroup = (id: string) => {
 
   // refresh list with removed key
   location.reload()
+}
+
+const addTodoItem = (todo_title?: string) => {
+  console.log(`group ${props.id} wants to add ${todo_title} to its list`)
+  // TODO: make click show modal
+  // FIXME: FOR NOW ITS A POP UP FORM UNDER THE TODO GROUP
+  show_form.value = !show_form.value
 }
 
 // TODO: add a button to add todo items | + use same modal popup from adding todo group
@@ -42,6 +54,38 @@ const deleteGroup = (id: string) => {
         <ListItem :id="item.id" :name="item.name" :completed="item.completed" />
       </li>
     </ul>
+    <div class="flex justify-start" @click="addTodoItem()">
+      <SquaresPlusIcon class="mr-3 h-5 w-5 text-emerald-400" />
+      <p>add todo item</p>
+    </div>
+
+    <!-- TEMP FORM ADDITION -->
+    <div :class="[show_form ? '' : 'hidden']">
+      <form
+        @submit.prevent="addTodoItem(todo_title)"
+        class="flex flex-col space-y-3"
+      >
+        <label for="todo-group-name-input">Add todo item</label>
+        <input
+          type="text"
+          placeholder="Add Todo Item"
+          id="todo-group-name-input"
+          v-model="todo_title"
+          class="rounded-md border p-1"
+          :class="[
+            input_err
+              ? 'border-red-500 placeholder:text-red-500'
+              : 'border-zinc-500',
+          ]"
+        />
+        <template v-if="input_err">
+          <p class="p-1 font-bold text-red-500">{{ input_err }}</p>
+        </template>
+        <button type="submit" class="w-min rounded-md bg-emerald-300 p-1">
+          Submit
+        </button>
+      </form>
+    </div>
     <!-- TODO: if checked => move to collapsed dropdown list of completed -->
     <!-- TODO: add delete button for all completed todo items -->
   </div>
