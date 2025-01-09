@@ -29,13 +29,10 @@ const sortArray = arr => {
   todo_data.value.sort((a, b) => a.group_name.localeCompare(b.group_name))
 }
 
-//TODO: Add error catch all function that can just take in err and output text on page
-
 const errCatch = (err: string) => {
   err_catch_all.value = err
 }
 
-//TODO: maybe make mnaual function that removes the localforage Array<Array<object>> and makes it just Array<object>
 const getItems = () => {
   const array_holder = ref([])
 
