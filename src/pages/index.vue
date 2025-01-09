@@ -11,7 +11,8 @@ import ListGroup from '@/components/ListGroup.vue'
 const todo_data = ref([])
 
 const new_group_name = ref('')
-const err = ref()
+const input_err = ref('')
+const err_catch_all = ref('')
 
 function runTest() {
   // TODO: make button show modal + input form
@@ -30,6 +31,10 @@ const sortArray = arr => {
 
 //TODO: Add error catch all function that can just take in err and output text on page
 
+const errCatch = (err: string) => {
+  err_catch_all.value = err
+}
+
 //TODO: maybe make mnaual function that removes the localforage Array<Array<object>> and makes it just Array<object>
 const getItems = () => {
   const array_holder = ref([])
@@ -42,13 +47,13 @@ const getItems = () => {
       sortArray(array_holder.value)
     })
     .catch(function (err) {
-      console.log(err)
+      errCatch(err)
     })
 }
 
 function onSubmit(group_name: string) {
   if (group_name == '') {
-    err.value = 'please enter a name for a new todo group'
+    input_err.value = 'please enter a name for a new todo group'
     return
   }
 
@@ -75,7 +80,7 @@ function onSubmit(group_name: string) {
     //TODO: is this .then and .catch needed? -- maybe .catch if theres an error.... hmmmm
     .then(function () {})
     .catch(function (err) {
-      console.log(err)
+      errCatch(err)
     })
 
   // remove data to prevent adding duplicates
@@ -111,11 +116,13 @@ getItems()
         v-model="new_group_name"
         class="rounded-md border p-1"
         :class="[
-          err ? 'border-red-500 placeholder:text-red-500' : 'border-zinc-500',
+          input_err
+            ? 'border-red-500 placeholder:text-red-500'
+            : 'border-zinc-500',
         ]"
       />
-      <template v-if="err">
-        <p class="p-1 font-bold text-red-500">{{ err }}</p>
+      <template v-if="input_err">
+        <p class="p-1 font-bold text-red-500">{{ input_err }}</p>
       </template>
       <button type="submit" class="w-min rounded-md bg-blue-300 p-1">
         Submit
