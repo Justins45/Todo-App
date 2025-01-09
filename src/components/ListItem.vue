@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 const props = defineProps<{
   id: string
-  name: string
+  todo_title: string
   completed: boolean
 }>()
 
@@ -17,6 +17,6 @@ const checked = ref(props.completed)
   <label
     :for="props.id"
     :class="[checked ? 'text-zinc-400 line-through' : '']"
-    >{{ props.name }}</label
+    >{{ props.todo_title }}</label
   >
 </template>

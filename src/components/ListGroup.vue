@@ -31,45 +31,56 @@ const deleteGroup = (id: string) => {
 }
 
 const addTodoItem = () => {
-  console.log(`group ${props.id} wants to add an item to its list`)
   // TODO: make click show modal
   // FIXME: FOR NOW ITS A POP UP FORM UNDER THE TODO GROUP
   show_form.value = !show_form.value
 }
 
 const onSubmit = (todo_title: string) => {
-  console.log(`starting submit of todo item on group ${props.group_name}`)
-
   if (todo_title == '') {
     input_err.value = 'please enter a todo item'
     return
   }
   const uuid = uuidv4()
 
-  const input_data = {
-    id: props.id,
-    group_name: props.group_name,
-    data: {
-      id: uuid,
-      todo_title: todo_title,
-      completed: false,
-    },
+  const input_data = ref([])
+
+  const old_data = props.data
+
+  const new_data = {
+    id: uuid,
+    todo_title: todo_title,
+    completed: false,
+  }
+
+  if (typeof old_data == 'undefined') {
+    input_data.value.push({
+      id: props.id,
+      group_name: props.group_name,
+      data: [new_data],
+    })
+  } else if (typeof old_data !== 'undefined') {
+    input_data.value.push({
+      id: props.id,
+      group_name: props.group_name,
+      data: [...old_data, new_data],
+    })
+  } else {
+    console.error('There was an error adding a todo item')
   }
 
   // NOTE: turn a proxy array into a readable array with previous json formatted data
-  const item = JSON.parse(JSON.stringify(input_data))
-  console.log('input data', item)
+  const item = JSON.parse(JSON.stringify(input_data.value))
 
   localforage
     .setItem(props.id, item)
-    .then(function (value) {
-      // Do other things once the value has been saved.
-      console.log(`${value} has been added`)
-    })
+    .then(function () {})
     .catch(function (err) {
       // This code runs if there were any errors
-      console.log(err, 'WASDASDASDASDA')
+      console.log(err)
     })
+
+  location.reload()
 }
 
 // TODO: add a button to add todo items | + use same modal popup from adding todo group
@@ -87,7 +98,12 @@ const onSubmit = (todo_title: string) => {
     <div class="h-0.5 w-full rounded-xl bg-zinc-300"></div>
     <ul class="ml-3 mt-3 lowercase">
       <li v-for="item in props.data" :key="item.id">
-        <ListItem :id="item.id" :name="item.name" :completed="item.completed" />
+        <!-- {{ item }} -->
+        <ListItem
+          :id="item.id"
+          :todo_title="item.todo_title"
+          :completed="item.completed"
+        />
       </li>
     </ul>
     <div class="flex justify-start" @click="addTodoItem()">

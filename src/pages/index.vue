@@ -81,6 +81,7 @@ function onSubmit(group_name: string) {
     .catch(function (err) {
       errCatch(err)
     })
+  console.log(inputData.value)
 
   // remove data to prevent adding duplicates
   inputData.value = []
@@ -90,6 +91,17 @@ function onSubmit(group_name: string) {
 
   location.reload()
 }
+
+// localforage
+//   .clear()
+//   .then(function () {
+//     // Run this code once the database has been entirely deleted.
+//     console.log('Database is now empty.')
+//   })
+//   .catch(function (err) {
+//     // This code runs if there were any errors
+//     console.log(err)
+//   })
 
 getItems()
 
@@ -133,7 +145,7 @@ console.log(todo_data.value, 'todo_data.value')
   </div>
   <template v-if="todo_data">
     <div v-for="data in todo_data" :key="data.id">
-      {{ data }}
+      <!-- {{ data }} -->
       <ListGroup
         :id="data.id"
         :group_name="data.group_name"

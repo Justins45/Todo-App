@@ -1,5 +1,5 @@
 export interface TypeListItem {
   id: string
-  name: string
+  todo_title: string
   completed: boolean
 }
