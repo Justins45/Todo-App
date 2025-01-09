@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import ListItem from '@/components/ListItem.vue'
 import { TrashIcon, SquaresPlusIcon } from '@heroicons/vue/24/outline'
 import localforage from 'localforage'
+import { v4 as uuidv4 } from 'uuid'
 
 import { type TypeListItem } from '../types'
 
@@ -29,11 +30,46 @@ const deleteGroup = (id: string) => {
   location.reload()
 }
 
-const addTodoItem = (todo_title?: string) => {
-  console.log(`group ${props.id} wants to add ${todo_title} to its list`)
+const addTodoItem = () => {
+  console.log(`group ${props.id} wants to add an item to its list`)
   // TODO: make click show modal
   // FIXME: FOR NOW ITS A POP UP FORM UNDER THE TODO GROUP
   show_form.value = !show_form.value
+}
+
+const onSubmit = (todo_title: string) => {
+  console.log(`starting submit of todo item on group ${props.group_name}`)
+
+  if (todo_title == '') {
+    input_err.value = 'please enter a todo item'
+    return
+  }
+  const uuid = uuidv4()
+
+  const input_data = {
+    id: props.id,
+    group_name: props.group_name,
+    data: {
+      id: uuid,
+      todo_title: todo_title,
+      completed: false,
+    },
+  }
+
+  // NOTE: turn a proxy array into a readable array with previous json formatted data
+  const item = JSON.parse(JSON.stringify(input_data))
+  console.log('input data', item)
+
+  localforage
+    .setItem(props.id, item)
+    .then(function (value) {
+      // Do other things once the value has been saved.
+      console.log(`${value} has been added`)
+    })
+    .catch(function (err) {
+      // This code runs if there were any errors
+      console.log(err, 'WASDASDASDASDA')
+    })
 }
 
 // TODO: add a button to add todo items | + use same modal popup from adding todo group
@@ -62,7 +98,7 @@ const addTodoItem = (todo_title?: string) => {
     <!-- TEMP FORM ADDITION -->
     <div :class="[show_form ? '' : 'hidden']">
       <form
-        @submit.prevent="addTodoItem(todo_title)"
+        @submit.prevent="onSubmit(todo_title)"
         class="flex flex-col space-y-3"
       >
         <label for="todo-group-name-input">Add todo item</label>

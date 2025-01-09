@@ -75,7 +75,9 @@ function onSubmit(group_name: string) {
   localforage
     .setItem(uuid, item)
     //TODO: is this .then and .catch needed? -- maybe .catch if theres an error.... hmmmm
-    .then(function () {})
+    .then(function (value) {
+      console.log(`${value} has been added to the database`)
+    })
     .catch(function (err) {
       errCatch(err)
     })
@@ -85,10 +87,13 @@ function onSubmit(group_name: string) {
 
   getItems()
   // NOTE: using reload to prevent a duplicate list from appearing when adding / changing a todo group
+
   location.reload()
 }
 
 getItems()
+
+console.log(todo_data.value, 'todo_data.value')
 
 // TODO: get form working for adding new todo groups | + make form a modal / popup
 </script>
@@ -128,7 +133,7 @@ getItems()
   </div>
   <template v-if="todo_data">
     <div v-for="data in todo_data" :key="data.id">
-      <!-- {{ data }} -->
+      {{ data }}
       <ListGroup
         :id="data.id"
         :group_name="data.group_name"
