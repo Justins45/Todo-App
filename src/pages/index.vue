@@ -6,8 +6,9 @@ import { v4 as uuidv4 } from 'uuid'
 
 import ListGroup from '@/components/ListGroup.vue'
 
+//TODO: put functions into their own files ?? might not work for everything / learn how to make it work and not be a mess
+
 const todo_data = ref([])
-const counter = ref(0)
 
 const new_group_name = ref('')
 const err = ref()
@@ -17,7 +18,6 @@ function runTest() {
   alert('test ran')
 }
 
-//TODO: sort by group_name alphabeticaly
 const sortArray = arr => {
   //NOTE: Remove extra array wrapper
   for (let i = 0; i < arr.length; i++) {
@@ -27,6 +27,8 @@ const sortArray = arr => {
   // sort array by group_name value
   todo_data.value.sort((a, b) => a.group_name.localeCompare(b.group_name))
 }
+
+//TODO: Add error catch all function that can just take in err and output text on page
 
 //TODO: maybe make mnaual function that removes the localforage Array<Array<object>> and makes it just Array<object>
 const getItems = () => {
@@ -40,7 +42,6 @@ const getItems = () => {
       sortArray(array_holder.value)
     })
     .catch(function (err) {
-      // This code runs if there were any errors
       console.log(err)
     })
 }
@@ -56,7 +57,6 @@ function onSubmit(group_name: string) {
   const uuid = uuidv4()
 
   //TODO: turn localforage scripts into functions in another file ?? | make this area cleaner
-  // add data to
   inputData.value = [
     {
       id: uuid,
@@ -72,20 +72,15 @@ function onSubmit(group_name: string) {
   // add data to storage
   localforage
     .setItem(uuid, item)
-    // is this .then and .catch needed? -- maybe .catch if theres an error.... hmmmm
-    .then(function (value) {
-      // Do other things once the value has been saved.
-      console.log(value, 'set item')
-    })
+    //TODO: is this .then and .catch needed? -- maybe .catch if theres an error.... hmmmm
+    .then(function () {})
     .catch(function (err) {
-      // This code runs if there were any errors
       console.log(err)
     })
 
   // remove data to prevent adding duplicates
   inputData.value = []
 
-  counter.value++
   getItems()
   // NOTE: using reload to prevent a duplicate list from appearing when adding / changing a todo group
   location.reload()
