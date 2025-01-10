@@ -76,11 +76,15 @@ const onSubmit = (todo_title: string) => {
     .setItem(props.id, item)
     .then(function () {})
     .catch(function (err) {
-      // This code runs if there were any errors
       console.log(err)
     })
 
   location.reload()
+}
+
+// TODO: deleteItem grabs emit event from group item containing ID
+const deleteItem = () => {
+  // TODO: do same as delete group but POP item in array using ID selector ?? might not work
 }
 
 // TODO: add a button to add todo items | + use same modal popup from adding todo group

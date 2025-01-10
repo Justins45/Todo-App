@@ -9,12 +9,12 @@ const props = defineProps<{
 }>()
 
 const checked = ref(props.completed)
-// TODO: add UUID for each list item
-// TODO: when completed update data.json at corrent location
 // TODO: when completed move to bottom of group
 
 const deleteItem = () => {
   console.log(`Deleting item ${props.todo_title}`)
+
+  // TODO: emit click event with id attached
 }
 </script>
 <template>
@@ -27,7 +27,7 @@ const deleteItem = () => {
         >{{ props.todo_title }}</label
       >
     </div>
-    <div @click="deleteItem(props.todo_title)">
+    <div @click="deleteItem()">
       <TrashIcon class="h-5 w-5 text-red-500 hover:underline" />
     </div>
   </div>
