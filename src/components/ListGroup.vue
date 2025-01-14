@@ -83,8 +83,16 @@ const onSubmit = (todo_title: string) => {
 }
 
 // TODO: deleteItem grabs emit event from group item containing ID
-const deleteItem = () => {
+const deleteItem = (itemID: string) => {
   // TODO: do same as delete group but POP item in array using ID selector ?? might not work
+  console.log(`item ${itemID} wants to be deleted`)
+}
+
+// TODO: update item completed via emit
+const updateCompleted = (itemID: string, checked: boolean) => {
+  console.log(
+    `item ${itemID} wants to be changed from ${checked} to ${!checked}`,
+  )
 }
 
 // TODO: add a button to add todo items | + use same modal popup from adding todo group
@@ -107,6 +115,8 @@ const deleteItem = () => {
           :id="item.id"
           :todo_title="item.todo_title"
           :completed="item.completed"
+          @delete-item="deleteItem"
+          @update-completed="updateCompleted"
         />
       </li>
     </ul>
