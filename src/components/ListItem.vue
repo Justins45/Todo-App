@@ -37,7 +37,7 @@ const updateCompleted = (itemID: string, checked: boolean) => {
         >{{ props.todo_title }}</label
       >
     </div>
-    <div @click="deleteItem(props.todo_title)">
+    <div @click="deleteItem(props.id)">
       <TrashIcon class="h-5 w-5 text-red-500 hover:underline" />
     </div>
   </div>

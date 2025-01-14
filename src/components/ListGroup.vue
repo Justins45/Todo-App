@@ -82,10 +82,38 @@ const onSubmit = (todo_title: string) => {
   location.reload()
 }
 
-// TODO: deleteItem grabs emit event from group item containing ID
 const deleteItem = (itemID: string) => {
-  // TODO: do same as delete group but POP item in array using ID selector ?? might not work
-  console.log(`item ${itemID} wants to be deleted`)
+  const item = ref([])
+  const item_list = props.data
+
+  if (item_list) {
+    for (let i = 0; i < item_list.length; i++) {
+      const element = item_list[i]
+      console.log(element.id)
+      if (element.id === itemID) {
+        // NOTE: splice will return with the value removed if set to a variable
+        item_list.splice(i, 1)
+        break
+      }
+    }
+
+    item.value.push({
+      id: props.id,
+      group_name: props.group_name,
+      data: item_list,
+    })
+
+    const reclone = JSON.parse(JSON.stringify(item.value))
+
+    localforage
+      .setItem(props.id, reclone)
+      .then(function () {})
+      .catch(function (err) {
+        console.error(err)
+      })
+  } else {
+    console.error('sorry there is no items to try and delete')
+  }
 }
 
 // TODO: update item completed via emit
