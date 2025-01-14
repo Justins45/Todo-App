@@ -17,8 +17,8 @@ const deleteItem = (itemID: string) => {
   emit('delete-item', itemID)
 }
 
-const updateCompleted = (itemID: string, checked: boolean) => {
-  emit('update-completed', itemID, checked)
+const updateCompleted = (itemID: string) => {
+  emit('update-completed', itemID)
 }
 </script>
 <template>
@@ -29,7 +29,7 @@ const updateCompleted = (itemID: string, checked: boolean) => {
         :id="props.id"
         class="mr-2"
         v-model="checked"
-        @click="updateCompleted(props.todo_title, checked)"
+        @click="updateCompleted(props.id)"
       />
       <label
         :for="props.id"

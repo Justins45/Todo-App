@@ -111,16 +111,51 @@ const deleteItem = (itemID: string) => {
       .catch(function (err) {
         console.error(err)
       })
+    location.reload()
   } else {
     console.error('sorry there is no items to try and delete')
   }
 }
 
-// TODO: update item completed via emit
-const updateCompleted = (itemID: string, checked: boolean) => {
-  console.log(
-    `item ${itemID} wants to be changed from ${checked} to ${!checked}`,
-  )
+const updateCompleted = (itemID: string) => {
+  const item = ref([])
+  const item_list = props.data
+
+  if (item_list) {
+    for (let i = 0; i < item_list.length; i++) {
+      const element = item_list[i]
+      if (element.id === itemID) {
+        if (element.completed) {
+          item_list[i].completed = false
+        } else {
+          item_list[i].completed = true
+        }
+
+        break
+      } else {
+        console.error(`no item with ${itemID} found`)
+      }
+    }
+
+    item.value.push({
+      id: props.id,
+      group_name: props.group_name,
+      data: item_list,
+    })
+
+    const reclone = JSON.parse(JSON.stringify(item.value))
+
+    localforage
+      .setItem(props.id, reclone)
+      .then(function () {})
+      .catch(function (err) {
+        console.error(err)
+      })
+
+    location.reload()
+  } else {
+    console.error('sorry there is no items to try and delete')
+  }
 }
 
 // TODO: add a button to add todo items | + use same modal popup from adding todo group
