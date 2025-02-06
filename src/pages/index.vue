@@ -111,49 +111,53 @@ console.log(todo_data.value, 'todo_data.value')
 </script>
 
 <template>
-  <div class="flex justify-end">
-    <button @click="runTest()">
-      <PlusIcon class="h-10 w-10 text-green-500" />
-    </button>
-  </div>
-  <!-- todo group form -->
-  <div class="mx-3 my-5">
-    <form
-      @submit.prevent="onSubmit(new_group_name)"
-      class="flex flex-col space-y-3"
-    >
-      <label for="todo-group-input">Todo group name input</label>
-      <input
-        type="text"
-        placeholder="Todo Group Name"
-        id="todo-group-name-input"
-        v-model="new_group_name"
-        class="rounded-md border p-1"
-        :class="[
-          input_err
-            ? 'border-red-500 placeholder:text-red-500'
-            : 'border-zinc-500',
-        ]"
-      />
-      <template v-if="input_err">
-        <p class="p-1 font-bold text-red-500">{{ input_err }}</p>
-      </template>
-      <button type="submit" class="w-min rounded-md bg-blue-300 p-1">
-        Submit
-      </button>
-    </form>
-  </div>
-  <template v-if="todo_data">
-    <div v-for="data in todo_data" :key="data.id">
-      <!-- {{ data }} -->
-      <ListGroup
-        :id="data.id"
-        :group_name="data.group_name"
-        :data="data.data"
-      />
+  <div class="bg-[#f0e7d1] pt-24">
+    <div class="mx-auto w-10/12 pb-5">
+      <form @submit.prevent="onSubmit(new_group_name)" class="">
+        <label for="todo-group-input" class="text-2xl font-bold"
+          >Your To Do</label
+        >
+        <div class="mt-5 flex">
+          <div class="w-full">
+            <input
+              type="text"
+              placeholder="eg: yard work"
+              id="todo-group-name-input"
+              v-model="new_group_name"
+              class="w-full border-b-2 bg-transparent pl-3"
+              :class="[
+                input_err
+                  ? 'border-red-500 placeholder:text-red-500'
+                  : 'border-zinc-500',
+              ]"
+            />
+            <template v-if="input_err">
+              <p class="p-1 font-bold text-red-500">{{ input_err }}</p>
+            </template>
+          </div>
+          <button
+            type="submit"
+            class="ml-3 mr-3 h-7 w-7 rounded-md bg-blue-300 p-0.5"
+          >
+            <PlusIcon class="h-6 w-6" />
+          </button>
+        </div>
+      </form>
     </div>
-  </template>
-  <template v-else>
-    <p>you have no todo groups</p>
-  </template>
+  </div>
+  <div class="mx-auto w-10/12">
+    <template v-if="todo_data">
+      <div v-for="data in todo_data" :key="data.id">
+        <!-- {{ data }} -->
+        <ListGroup
+          :id="data.id"
+          :group_name="data.group_name"
+          :data="data.data"
+        />
+      </div>
+    </template>
+    <template v-else>
+      <p>you have no todo groups</p>
+    </template>
+  </div>
 </template>
