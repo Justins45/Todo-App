@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import ListItem from '@/components/ListItem.vue'
-import { TrashIcon, SquaresPlusIcon } from '@heroicons/vue/24/outline'
+import {
+  EllipsisHorizontalIcon,
+  TrashIcon,
+  SquaresPlusIcon,
+} from '@heroicons/vue/24/outline'
 import localforage from 'localforage'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -161,15 +165,19 @@ const updateCompleted = (itemID: string) => {
 // TODO: add a button to add todo items | + use same modal popup from adding todo group
 </script>
 <template>
-  <div class="px-5 py-3" :id="props.id">
+  <div class="mb-10" :id="props.id">
     <div class="flex justify-between">
-      <h2 class="h-10 uppercase">{{ props.group_name }}</h2>
-      <div @click="deleteGroup(props.id)">
-        <TrashIcon class="h-5 w-5 text-red-500 hover:underline" />
+      <h2 class="text-lg uppercase">{{ props.group_name }}</h2>
+      <div class="flex">
+        <button @click="addTodoItem()">
+          <SquaresPlusIcon class="mx-3 h-5 w-5 text-emerald-400" />
+        </button>
+        <button @click="deleteGroup(props.id)" class="mx-3">
+          <TrashIcon class="h-5 w-5 text-red-500" />
+        </button>
       </div>
     </div>
 
-    <!-- TODO: add remove group button -->
     <div class="h-0.5 w-full rounded-xl bg-zinc-300"></div>
     <ul class="ml-3 mt-3 lowercase">
       <li v-for="item in props.data" :key="item.id">
@@ -183,10 +191,6 @@ const updateCompleted = (itemID: string) => {
         />
       </li>
     </ul>
-    <div class="flex justify-start" @click="addTodoItem()">
-      <SquaresPlusIcon class="mr-3 h-5 w-5 text-emerald-400" />
-      <p>add todo item</p>
-    </div>
 
     <!-- TEMP FORM ADDITION -->
     <div :class="[show_form ? '' : 'hidden']">
@@ -215,7 +219,5 @@ const updateCompleted = (itemID: string) => {
         </button>
       </form>
     </div>
-    <!-- TODO: if checked => move to collapsed dropdown list of completed -->
-    <!-- TODO: add delete button for all completed todo items -->
   </div>
 </template>

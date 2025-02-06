@@ -50,7 +50,7 @@ const getItems = () => {
 
 function onSubmit(group_name: string) {
   if (group_name == '') {
-    input_err.value = 'please enter a name for a new todo group'
+    input_err.value = 'value cannot be empty'
     return
   }
 
@@ -111,7 +111,7 @@ console.log(todo_data.value, 'todo_data.value')
 </script>
 
 <template>
-  <div class="bg-[#f0e7d1] pt-24">
+  <div class="mb-5 bg-[#f0e7d1] pt-24">
     <div class="mx-auto w-10/12 pb-5">
       <form @submit.prevent="onSubmit(new_group_name)" class="">
         <label for="todo-group-input" class="text-2xl font-bold"
@@ -137,7 +137,7 @@ console.log(todo_data.value, 'todo_data.value')
           </div>
           <button
             type="submit"
-            class="ml-3 mr-3 h-7 w-7 rounded-md bg-blue-300 p-0.5"
+            class="mx-3 h-7 w-7 rounded-md bg-blue-300 p-0.5"
           >
             <PlusIcon class="h-6 w-6" />
           </button>
