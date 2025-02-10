@@ -20,6 +20,7 @@ const props = defineProps<{
 const todo_title = ref('')
 const input_err = ref('')
 const show_form = ref(false)
+const is_hidden = ref(false)
 
 const deleteGroup = (id: string) => {
   localforage
@@ -168,12 +169,28 @@ const updateCompleted = (itemID: string) => {
   <div class="mb-10" :id="props.id">
     <div class="flex justify-between">
       <h2 class="text-lg uppercase">{{ props.group_name }}</h2>
-      <div class="flex">
-        <button @click="addTodoItem()">
-          <SquaresPlusIcon class="mx-3 h-5 w-5 text-emerald-400" />
-        </button>
-        <button @click="deleteGroup(props.id)" class="mx-3">
-          <TrashIcon class="h-5 w-5 text-red-500" />
+      <div class="relative">
+        <div
+          class="absolute -right-1 -top-20 rounded-lg bg-pink-300 p-3"
+          :class="[is_hidden ? '' : 'hidden']"
+        >
+          <div class="flex w-48 flex-col">
+            <button @click="addTodoItem()" class="flex justify-between">
+              Add Todo item
+              <SquaresPlusIcon class="h-5 w-5 text-emerald-400" />
+            </button>
+            <button @click="deleteGroup(props.id)" class="flex justify-between">
+              Remove Todo Group
+              <TrashIcon class="h-5 w-5 text-red-500" />
+            </button>
+          </div>
+          <div
+            class="absolute right-2 -z-10 h-5 w-5 rotate-45 bg-pink-300"
+          ></div>
+        </div>
+
+        <button @click="is_hidden = !is_hidden" class="float-right">
+          <EllipsisHorizontalIcon class="h-7 w-7" />
         </button>
       </div>
     </div>
