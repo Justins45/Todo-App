@@ -171,7 +171,7 @@ const updateCompleted = (itemID: string) => {
       <h2 class="text-lg uppercase">{{ props.group_name }}</h2>
       <div class="relative">
         <div
-          class="absolute -right-1 -top-20 rounded-lg bg-pink-300 p-3"
+          class="border-1 absolute -right-1 -top-24 rounded-lg bg-white p-3 shadow-md"
           :class="[is_hidden ? '' : 'hidden']"
         >
           <div class="flex w-48 flex-col">
@@ -179,14 +179,12 @@ const updateCompleted = (itemID: string) => {
               Add Todo item
               <SquaresPlusIcon class="h-5 w-5 text-emerald-400" />
             </button>
+            <div class="my-1.5 h-0.5 w-full bg-slate-300"></div>
             <button @click="deleteGroup(props.id)" class="flex justify-between">
               Remove Todo Group
               <TrashIcon class="h-5 w-5 text-red-500" />
             </button>
           </div>
-          <div
-            class="absolute right-2 -z-10 h-5 w-5 rotate-45 bg-pink-300"
-          ></div>
         </div>
 
         <button @click="is_hidden = !is_hidden" class="float-right">
