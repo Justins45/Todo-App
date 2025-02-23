@@ -15,7 +15,6 @@ const props = withDefaults(
 )
 
 const checked = ref(props.completed)
-// TODO: when completed move to bottom of group
 
 const emit = defineEmits(['delete-item', 'update-completed'])
 

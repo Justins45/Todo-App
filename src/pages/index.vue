@@ -6,12 +6,17 @@ import { v4 as uuidv4 } from 'uuid'
 
 import ListGroup from '@/components/ListGroup.vue'
 
-//TODO: put functions into their own files ?? might not work for everything / learn how to make it work and not be a mess
+// TODO: put functions into their own files ?? might not work for everything / learn how to make it work and not be a mess
 
 const todo_data = ref([])
+const todo_item_data = ref()
+const show_item_modal = ref(false)
 
 const new_group_name = ref('')
+const todo_item_name = ref('')
+
 const input_err = ref('')
+const input_item_err = ref('')
 const err_catch_all = ref('')
 
 const sortArray = arr => {
@@ -98,9 +103,69 @@ function onSubmit(group_name: string) {
 //     console.log(err)
 //   })
 
-getItems()
+// NOTE: grab todo items parent group info and set it, Cannot pause a function in JS to wait on a submit to continue function.
+const addTodoItems = (
+  todo_groupID: string,
+  todo_group_name: string,
+  todo_group_data: any,
+) => {
+  show_item_modal.value = true
 
-// TODO: get form working for adding new todo groups | + make form a modal / popup
+  todo_item_data.value = {
+    todo_groupID: todo_groupID,
+    todo_group_name: todo_group_name,
+    todo_group_data: todo_group_data,
+  }
+}
+
+const onTodoItemSubmit = (todo_item_name: string) => {
+  if (todo_item_name == '') {
+    input_item_err.value = 'value cannot be empty'
+    return
+  }
+
+  const uuid = uuidv4()
+
+  const input_data = ref([])
+
+  const old_data = todo_item_data.value.todo_group_data
+
+  const new_data = {
+    id: uuid,
+    todo_title: todo_item_name,
+    completed: false,
+  }
+
+  if (typeof old_data == 'undefined') {
+    input_data.value.push({
+      id: todo_item_data.value.todo_groupID,
+      group_name: todo_item_data.value.todo_group_name,
+      data: [new_data],
+    })
+  } else if (typeof old_data !== 'undefined') {
+    input_data.value.push({
+      id: todo_item_data.value.todo_groupID,
+      group_name: todo_item_data.value.todo_group_name,
+      data: [...old_data, new_data],
+    })
+  } else {
+    console.error('There was an error adding a todo item')
+  }
+
+  // NOTE: turn a proxy array into a readable array with previous json formatted data
+  const item = JSON.parse(JSON.stringify(input_data.value))
+
+  localforage
+    .setItem(todo_item_data.value.todo_groupID, item)
+    .then(function () {})
+    .catch(function (err) {
+      console.log(err)
+    })
+
+  location.reload()
+}
+
+getItems()
 </script>
 
 <template>
@@ -141,11 +206,11 @@ getItems()
   <div class="mx-auto w-10/12">
     <template v-if="todo_data">
       <div v-for="data in todo_data" :key="data.id">
-        <!-- {{ data }} -->
         <ListGroup
           :id="data.id"
           :group_name="data.group_name"
           :data="data.data"
+          @addTodoItem="addTodoItems"
         />
       </div>
     </template>
@@ -153,14 +218,14 @@ getItems()
       <p>you have no todo groups</p>
     </template>
   </div>
-  <div class="hidden">
+  <div :class="[show_item_modal ? '' : 'hidden']">
     <div class="absolute top-0 z-0 h-lvh w-lvw bg-zinc-300 opacity-60"></div>
     <div
       class="absolute left-1/2 top-1/2 z-10 h-1/4 w-10/12 -translate-x-1/2 -translate-y-1/2 transform rounded-2xl bg-white"
     >
       <div class="h-full p-5">
         <form
-          @submit.prevent="onSubmit(todo_title)"
+          @submit.prevent="onTodoItemSubmit(todo_item_name)"
           class="flex h-full flex-col justify-between"
         >
           <div>
@@ -171,16 +236,16 @@ getItems()
               type="text"
               placeholder="Add Todo Item"
               id="todo-group-name-input"
-              v-model="todo_title"
+              v-model="todo_item_name"
               class="ml-3 mt-5 w-11/12 border-b-2 bg-transparent pl-3 placeholder:text-lg"
               :class="[
-                input_err
+                input_item_err
                   ? 'border-red-500 placeholder:text-red-500'
                   : 'border-zinc-500',
               ]"
             />
-            <template v-if="input_err">
-              <p class="p-1 font-bold text-red-500">{{ input_err }}</p>
+            <template v-if="input_item_err">
+              <p class="p-1 font-bold text-red-500">{{ input_item_err }}</p>
             </template>
           </div>
           <div class="flex flex-row justify-end text-lg">
