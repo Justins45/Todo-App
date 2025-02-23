@@ -5,6 +5,7 @@ import {
   EllipsisHorizontalIcon,
   TrashIcon,
   SquaresPlusIcon,
+  BackspaceIcon,
 } from '@heroicons/vue/24/outline'
 import localforage from 'localforage'
 import { v4 as uuidv4 } from 'uuid'
@@ -21,6 +22,7 @@ const todo_title = ref('')
 const input_err = ref('')
 const show_form = ref(false)
 const is_hidden = ref(false)
+const show_delete = ref(false)
 
 const deleteGroup = (id: string) => {
   localforage
@@ -122,6 +124,10 @@ const deleteItem = (itemID: string) => {
   }
 }
 
+const RemoveTodoItems = () => {
+  show_delete.value = !show_delete.value
+}
+
 const updateCompleted = (itemID: string) => {
   const item = ref([])
   const item_list = props.data
@@ -171,7 +177,7 @@ const updateCompleted = (itemID: string) => {
       <h2 class="text-lg uppercase">{{ props.group_name }}</h2>
       <div class="relative">
         <div
-          class="border-1 absolute -right-1 -top-24 rounded-lg bg-white p-3 shadow-md"
+          class="border-1 absolute -right-1 -top-32 rounded-lg bg-white p-3 shadow-md"
           :class="[is_hidden ? '' : 'hidden']"
         >
           <div class="flex w-48 flex-col">
@@ -183,6 +189,11 @@ const updateCompleted = (itemID: string) => {
             <button @click="deleteGroup(props.id)" class="flex justify-between">
               Remove Todo Group
               <TrashIcon class="h-5 w-5 text-red-500" />
+            </button>
+            <div class="my-1.5 h-0.5 w-full bg-slate-300"></div>
+            <button @click="RemoveTodoItems()" class="flex justify-between">
+              Remove todo items
+              <BackspaceIcon class="h-5 w-5 text-red-500" />
             </button>
           </div>
         </div>
@@ -203,6 +214,7 @@ const updateCompleted = (itemID: string) => {
           :completed="item.completed"
           @delete-item="deleteItem"
           @update-completed="updateCompleted"
+          :show_delete="show_delete"
         />
       </li>
     </ul>
