@@ -14,11 +14,6 @@ const new_group_name = ref('')
 const input_err = ref('')
 const err_catch_all = ref('')
 
-function runTest() {
-  // TODO: make button show modal + input form
-  alert('test ran')
-}
-
 const sortArray = arr => {
   //NOTE: Remove extra array wrapper
   for (let i = 0; i < arr.length; i++) {
