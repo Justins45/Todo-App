@@ -100,8 +100,6 @@ function onSubmit(group_name: string) {
 
 getItems()
 
-console.log(todo_data.value, 'todo_data.value')
-
 // TODO: get form working for adding new todo groups | + make form a modal / popup
 </script>
 
@@ -154,5 +152,50 @@ console.log(todo_data.value, 'todo_data.value')
     <template v-else>
       <p>you have no todo groups</p>
     </template>
+  </div>
+  <div class="hidden">
+    <div class="absolute top-0 z-0 h-lvh w-lvw bg-zinc-300 opacity-60"></div>
+    <div
+      class="absolute left-1/2 top-1/2 z-10 h-1/4 w-10/12 -translate-x-1/2 -translate-y-1/2 transform rounded-2xl bg-white"
+    >
+      <div class="h-full p-5">
+        <form
+          @submit.prevent="onSubmit(todo_title)"
+          class="flex h-full flex-col justify-between"
+        >
+          <div>
+            <label for="todo-group-name-input" class="text-2xl font-bold"
+              >Add todo item</label
+            >
+            <input
+              type="text"
+              placeholder="Add Todo Item"
+              id="todo-group-name-input"
+              v-model="todo_title"
+              class="ml-3 mt-5 w-11/12 border-b-2 bg-transparent pl-3 placeholder:text-lg"
+              :class="[
+                input_err
+                  ? 'border-red-500 placeholder:text-red-500'
+                  : 'border-zinc-500',
+              ]"
+            />
+            <template v-if="input_err">
+              <p class="p-1 font-bold text-red-500">{{ input_err }}</p>
+            </template>
+          </div>
+          <div class="flex flex-row justify-end text-lg">
+            <button class="mr-3 rounded-md bg-zinc-300 px-5 py-2">
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="w-min rounded-md bg-emerald-300 px-5 py-2"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
