@@ -19,7 +19,7 @@ const props = defineProps<{
 
 const emit = defineEmits(['add-todo-item'])
 
-const is_hidden = ref(false)
+const is_hidden = ref(true)
 const show_delete = ref(false)
 
 const deleteGroup = (id: string) => {
@@ -36,6 +36,7 @@ const deleteGroup = (id: string) => {
 
 const addTodoItem = () => {
   emit('add-todo-item', props.id, props.group_name, props.data)
+  is_hidden.value = true
 }
 
 const deleteItem = (itemID: string) => {
@@ -125,7 +126,7 @@ const updateCompleted = (itemID: string) => {
       <div class="relative">
         <div
           class="border-1 absolute -right-1 -top-32 rounded-lg bg-white p-3 shadow-md"
-          :class="[is_hidden ? '' : 'hidden']"
+          :class="[is_hidden ? 'hidden' : '']"
         >
           <div class="flex w-48 flex-col">
             <button @click="addTodoItem()" class="flex justify-between">

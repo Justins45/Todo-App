@@ -15,8 +15,8 @@ const show_item_modal = ref(false)
 const new_group_name = ref('')
 const todo_item_name = ref('')
 
-const input_err = ref('')
-const input_item_err = ref('')
+const input_err = ref()
+const input_item_err = ref<string | null>()
 const err_catch_all = ref('')
 
 const sortArray = arr => {
@@ -120,7 +120,7 @@ const addTodoItems = (
 
 const onTodoItemSubmit = (todo_item_name: string) => {
   if (todo_item_name == '') {
-    input_item_err.value = 'value cannot be empty'
+    input_item_err.value = 'Todo item cannot be empty'
     return
   }
 
@@ -224,42 +224,50 @@ getItems()
       class="absolute left-1/2 top-1/2 z-10 h-1/4 w-10/12 -translate-x-1/2 -translate-y-1/2 transform rounded-2xl bg-white"
     >
       <div class="h-full p-5">
-        <form
-          @submit.prevent="onTodoItemSubmit(todo_item_name)"
-          class="flex h-full flex-col justify-between"
-        >
-          <div>
-            <label for="todo-group-name-input" class="text-2xl font-bold"
-              >Add todo item</label
-            >
-            <input
-              type="text"
-              placeholder="Add Todo Item"
-              id="todo-group-name-input"
-              v-model="todo_item_name"
-              class="ml-3 mt-5 w-11/12 border-b-2 bg-transparent pl-3 placeholder:text-lg"
-              :class="[
-                input_item_err
-                  ? 'border-red-500 placeholder:text-red-500'
-                  : 'border-zinc-500',
-              ]"
-            />
-            <template v-if="input_item_err">
-              <p class="p-1 font-bold text-red-500">{{ input_item_err }}</p>
-            </template>
-          </div>
+        <div class="flex h-full flex-col justify-between">
+          <form
+            @submit.prevent="onTodoItemSubmit(todo_item_name)"
+            id="todo_item_input_form"
+          >
+            <div>
+              <label for="todo-group-name-input" class="text-2xl font-bold"
+                >Add todo item</label
+              >
+              <input
+                type="text"
+                placeholder="Add Todo Item"
+                id="todo-group-name-input"
+                v-model="todo_item_name"
+                class="ml-3 mt-5 w-11/12 border-b-2 bg-transparent pl-3 placeholder:text-lg"
+                :class="[
+                  input_item_err
+                    ? 'border-red-500 placeholder:text-red-500'
+                    : 'border-zinc-500',
+                ]"
+              />
+              <template v-if="input_item_err">
+                <p class="ml-5 p-1 font-bold text-red-500">
+                  {{ input_item_err }}
+                </p>
+              </template>
+            </div>
+          </form>
           <div class="flex flex-row justify-end text-lg">
-            <button class="mr-3 rounded-md bg-zinc-300 px-5 py-2">
+            <button
+              @click="show_item_modal = false"
+              class="mr-3 rounded-md bg-zinc-300 px-5 py-2"
+            >
               Cancel
             </button>
             <button
               type="submit"
+              form="todo_item_input_form"
               class="w-min rounded-md bg-emerald-300 px-5 py-2"
             >
               Submit
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   </div>
