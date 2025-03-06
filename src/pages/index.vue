@@ -11,13 +11,17 @@ import Modal from '@/components/Modal.vue'
 
 const todo_data = ref([])
 const todo_item_data = ref()
+
 const show_item_modal = ref(false)
+const show_delete_modal = ref(false)
 
 const new_group_name = ref('')
 const todo_item_name = ref('')
+const delete_todo_group_name = ref('')
 
 const input_err = ref()
 const input_item_err = ref<string | null>()
+const delete_group_err = ref('')
 const err_catch_all = ref('')
 
 const sortArray = arr => {
@@ -166,6 +170,8 @@ const onTodoItemSubmit = (todo_item_name: string) => {
   location.reload()
 }
 
+const deleteTodoGroup = (todo_group_name_original: string) => {}
+
 getItems()
 </script>
 
@@ -265,6 +271,51 @@ getItems()
             class="w-min rounded-md bg-emerald-300 px-5 py-2"
           >
             Submit
+          </button>
+        </div>
+      </Modal>
+      <Modal>
+        <form
+          @submit.prevent="deleteTodoGroup(delete_todo_group_name)"
+          id="todo_delete_group_form"
+        >
+          <div>
+            <label for="todo-group-name-input" class="text-2xl font-bold"
+              >Are you sure you want to Delete your Todo Group
+            </label>
+            <p>Please type the name of the todo group to confirm deletion</p>
+            <input
+              type="text"
+              placeholder="Add Todo Item"
+              id="todo-delete-group-name-input"
+              v-model="delete_todo_group_name"
+              class="ml-3 mt-5 w-11/12 border-b-2 bg-transparent pl-3 placeholder:text-lg"
+              :class="[
+                delete_group_err
+                  ? 'border-red-500 placeholder:text-red-500'
+                  : 'border-zinc-500',
+              ]"
+            />
+            <template v-if="delete_group_err">
+              <p class="ml-5 p-1 font-bold text-red-500">
+                {{ delete_group_err }}
+              </p>
+            </template>
+          </div>
+        </form>
+        <div class="flex flex-row justify-end text-lg">
+          <button
+            @click="show_delete_modal = false"
+            class="mr-3 rounded-md bg-zinc-300 px-5 py-2"
+          >
+            Keep
+          </button>
+          <button
+            type="submit"
+            form="todo_delete_group_form"
+            class="w-min rounded-md bg-red-500 px-5 py-2 uppercase"
+          >
+            Delete
           </button>
         </div>
       </Modal>
