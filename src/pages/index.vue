@@ -225,100 +225,94 @@ getItems()
       <p>you have no todo groups</p>
     </template>
   </div>
-  <div :class="[show_item_modal ? '' : 'hidden']">
-    <div class="absolute top-0 z-0 h-lvh w-lvw bg-zinc-300 opacity-60"></div>
-    <div
-      class="absolute left-1/2 top-1/2 z-10 h-1/4 w-10/12 -translate-x-1/2 -translate-y-1/2 transform rounded-2xl bg-white"
+  <Modal :hidden="show_item_modal">
+    <form
+      @submit.prevent="onTodoItemSubmit(todo_item_name)"
+      id="todo_item_input_form"
     >
-      <Modal>
-        <form
-          @submit.prevent="onTodoItemSubmit(todo_item_name)"
-          id="todo_item_input_form"
+      <div>
+        <label for="todo-group-name-input" class="text-2xl font-bold"
+          >Add todo item</label
         >
-          <div>
-            <label for="todo-group-name-input" class="text-2xl font-bold"
-              >Add todo item</label
-            >
-            <input
-              type="text"
-              placeholder="Add Todo Item"
-              id="todo-group-name-input"
-              v-model="todo_item_name"
-              class="ml-3 mt-5 w-11/12 border-b-2 bg-transparent pl-3 placeholder:text-lg"
-              :class="[
-                input_item_err
-                  ? 'border-red-500 placeholder:text-red-500'
-                  : 'border-zinc-500',
-              ]"
-            />
-            <template v-if="input_item_err">
-              <p class="ml-5 p-1 font-bold text-red-500">
-                {{ input_item_err }}
-              </p>
-            </template>
-          </div>
-        </form>
-        <div class="flex flex-row justify-end text-lg">
-          <button
-            @click="show_item_modal = false"
-            class="mr-3 rounded-md bg-zinc-300 px-5 py-2"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            form="todo_item_input_form"
-            class="w-min rounded-md bg-emerald-300 px-5 py-2"
-          >
-            Submit
-          </button>
-        </div>
-      </Modal>
-      <Modal>
-        <form
-          @submit.prevent="deleteTodoGroup(delete_todo_group_name)"
-          id="todo_delete_group_form"
-        >
-          <div>
-            <label for="todo-group-name-input" class="text-2xl font-bold"
-              >Are you sure you want to Delete your Todo Group
-            </label>
-            <p>Please type the name of the todo group to confirm deletion</p>
-            <input
-              type="text"
-              placeholder="Add Todo Item"
-              id="todo-delete-group-name-input"
-              v-model="delete_todo_group_name"
-              class="ml-3 mt-5 w-11/12 border-b-2 bg-transparent pl-3 placeholder:text-lg"
-              :class="[
-                delete_group_err
-                  ? 'border-red-500 placeholder:text-red-500'
-                  : 'border-zinc-500',
-              ]"
-            />
-            <template v-if="delete_group_err">
-              <p class="ml-5 p-1 font-bold text-red-500">
-                {{ delete_group_err }}
-              </p>
-            </template>
-          </div>
-        </form>
-        <div class="flex flex-row justify-end text-lg">
-          <button
-            @click="show_delete_modal = false"
-            class="mr-3 rounded-md bg-zinc-300 px-5 py-2"
-          >
-            Keep
-          </button>
-          <button
-            type="submit"
-            form="todo_delete_group_form"
-            class="w-min rounded-md bg-red-500 px-5 py-2 uppercase"
-          >
-            Delete
-          </button>
-        </div>
-      </Modal>
+        <input
+          type="text"
+          placeholder="Add Todo Item"
+          id="todo-group-name-input"
+          v-model="todo_item_name"
+          class="ml-3 mt-5 w-11/12 border-b-2 bg-transparent pl-3 placeholder:text-lg"
+          :class="[
+            input_item_err
+              ? 'border-red-500 placeholder:text-red-500'
+              : 'border-zinc-500',
+          ]"
+        />
+        <template v-if="input_item_err">
+          <p class="ml-5 p-1 font-bold text-red-500">
+            {{ input_item_err }}
+          </p>
+        </template>
+      </div>
+    </form>
+    <div class="flex flex-row justify-end text-lg">
+      <button
+        @click="show_item_modal = false"
+        class="mr-3 rounded-md bg-zinc-300 px-5 py-2"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        form="todo_item_input_form"
+        class="w-min rounded-md bg-emerald-300 px-5 py-2"
+      >
+        Submit
+      </button>
     </div>
-  </div>
+  </Modal>
+
+  <Modal :hidden="show_delete_modal">
+    <form
+      @submit.prevent="deleteTodoGroup(delete_todo_group_name)"
+      id="todo_delete_group_form"
+    >
+      <div>
+        <label for="todo-group-name-input" class="text-2xl font-bold"
+          >Are you sure you want to Delete your Todo Group
+        </label>
+        <p>Please type the name of the todo group to confirm deletion</p>
+        <input
+          type="text"
+          placeholder="Add Todo Item"
+          id="todo-delete-group-name-input"
+          v-model="delete_todo_group_name"
+          class="ml-3 mt-5 w-11/12 border-b-2 bg-transparent pl-3 placeholder:text-lg"
+          :class="[
+            delete_group_err
+              ? 'border-red-500 placeholder:text-red-500'
+              : 'border-zinc-500',
+          ]"
+        />
+        <template v-if="delete_group_err">
+          <p class="ml-5 p-1 font-bold text-red-500">
+            {{ delete_group_err }}
+          </p>
+        </template>
+      </div>
+    </form>
+    <div class="flex flex-row justify-end text-lg">
+      <button
+        @click="show_delete_modal = false"
+        class="mr-3 rounded-md bg-zinc-300 px-5 py-2"
+      >
+        Keep
+      </button>
+      <button
+        type="submit"
+        form="todo_delete_group_form"
+        class="w-min rounded-md bg-red-500 px-5 py-2 uppercase"
+      >
+        Delete
+      </button>
+    </div>
+  </Modal>
 </template>
