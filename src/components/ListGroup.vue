@@ -17,21 +17,14 @@ const props = defineProps<{
   data?: Array<TypeListItem>
 }>()
 
-const emit = defineEmits(['add-todo-item'])
+const emit = defineEmits(['add-todo-item', 'delete-todo-group'])
 
 const is_hidden = ref(true)
 const show_delete = ref(false)
 
-const deleteGroup = (id: string) => {
-  localforage
-    .removeItem(id)
-    .then(function () {})
-    .catch(function (err) {
-      console.log(err)
-    })
-
-  // refresh list with removed key
-  location.reload()
+const deleteGroup = () => {
+  emit('delete-todo-group', props.id, props.group_name)
+  is_hidden.value = true
 }
 
 const addTodoItem = () => {
@@ -134,7 +127,7 @@ const updateCompleted = (itemID: string) => {
               <SquaresPlusIcon class="h-5 w-5 text-emerald-400" />
             </button>
             <div class="my-1.5 h-0.5 w-full bg-slate-300"></div>
-            <button @click="deleteGroup(props.id)" class="flex justify-between">
+            <button @click="deleteGroup()" class="flex justify-between">
               Remove Todo Group
               <TrashIcon class="h-5 w-5 text-red-500" />
             </button>

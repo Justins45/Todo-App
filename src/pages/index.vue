@@ -11,6 +11,7 @@ import Modal from '@/components/Modal.vue'
 
 const todo_data = ref([])
 const todo_item_data = ref()
+const delete_group_data = ref()
 
 const show_item_modal = ref(false)
 const show_delete_modal = ref(false)
@@ -170,7 +171,32 @@ const onTodoItemSubmit = (todo_item_name: string) => {
   location.reload()
 }
 
-const deleteTodoGroup = (todo_group_name_original: string) => {}
+const deleteTodoGroup = (
+  todo_group_id: string,
+  todo_group_name_original: string,
+) => {
+  show_delete_modal.value = true
+
+  delete_group_data.value = {
+    id: todo_group_id,
+    original_name: todo_group_name_original.toUpperCase(),
+  }
+}
+
+const onDeleteTodoGroup = (delete_input_name: string) => {
+  if (delete_input_name != delete_group_data.value.original_name) {
+    delete_group_err.value = 'Todo Group name does not match'
+    return
+  }
+
+  localforage
+    .removeItem(delete_group_data.value.id)
+    .then(function () {})
+    .catch(function (err) {
+      console.log(err)
+    })
+  location.reload()
+}
 
 getItems()
 </script>
@@ -217,7 +243,8 @@ getItems()
           :id="data.id"
           :group_name="data.group_name"
           :data="data.data"
-          @addTodoItem="addTodoItems"
+          @add-todo-item="addTodoItems"
+          @delete-todo-group="deleteTodoGroup"
         />
       </div>
     </template>
@@ -253,7 +280,7 @@ getItems()
         </template>
       </div>
     </form>
-    <div class="flex flex-row justify-end text-lg">
+    <div class="mt-8 flex flex-row justify-end text-lg">
       <button
         @click="show_item_modal = false"
         class="mr-3 rounded-md bg-zinc-300 px-5 py-2"
@@ -272,17 +299,19 @@ getItems()
 
   <Modal :hidden="show_delete_modal">
     <form
-      @submit.prevent="deleteTodoGroup(delete_todo_group_name)"
+      @submit.prevent="onDeleteTodoGroup(delete_todo_group_name)"
       id="todo_delete_group_form"
     >
       <div>
         <label for="todo-group-name-input" class="text-2xl font-bold"
-          >Are you sure you want to Delete your Todo Group
+          >WAIT!! Are you sure you want to Delete your Todo Group?
         </label>
-        <p>Please type the name of the todo group to confirm deletion</p>
+        <p class="my-3">
+          Please type the name of the todo group to confirm deletion.
+        </p>
         <input
           type="text"
-          placeholder="Add Todo Item"
+          placeholder="Todo Group Name"
           id="todo-delete-group-name-input"
           v-model="delete_todo_group_name"
           class="ml-3 mt-5 w-11/12 border-b-2 bg-transparent pl-3 placeholder:text-lg"
@@ -299,7 +328,7 @@ getItems()
         </template>
       </div>
     </form>
-    <div class="flex flex-row justify-end text-lg">
+    <div class="mt-8 flex flex-row justify-end text-lg">
       <button
         @click="show_delete_modal = false"
         class="mr-3 rounded-md bg-zinc-300 px-5 py-2"
